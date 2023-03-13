@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,18 +34,21 @@ public class UserController {
 		return ResponseEntity.status(201).body(createdUser);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/fetch-all")
 	public ResponseEntity<?> readAllUser() throws NoEntitiesException {
 		List<User> users = this.userService.readAllUser();
 		return ResponseEntity.status(200).body(users);
 	}
 
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@GetMapping("/fetch/{username}")
 	public ResponseEntity<?> readUserById(@PathVariable String username) throws EntityNotFoundException {
 		User user = this.userService.readUserById(username);
 		return ResponseEntity.status(200).body(user);
 	}
 
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@DeleteMapping("/deactivate-account/{username}")
 	public ResponseEntity<?> deleteUserById(@PathVariable String username) throws EntityNotFoundException {
 		String message = this.userService.deleteUserById(username);

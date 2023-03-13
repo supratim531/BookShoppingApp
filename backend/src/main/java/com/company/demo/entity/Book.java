@@ -7,13 +7,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -32,9 +33,10 @@ import lombok.NoArgsConstructor;
 public class Book {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GenericGenerator(name = "book_id_generator", strategy = "com.company.demo.generator.BookIdGenerator")
+	@GeneratedValue(generator = "book_id_generator")
 	@Column(name = "book_id")
-	private Long bookId;
+	private String bookId;
 
 	@Column(name = "book_name")
 	private String bookName;
@@ -48,6 +50,9 @@ public class Book {
 	@Column(name = "stock")
 	private Long stock;
 
+	@Column(name = "book_image")
+	private String bookImage;
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "book_author", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "author_id") })
@@ -57,12 +62,13 @@ public class Book {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
 	private List<OrderDetails> orderDetails = new ArrayList<>();
 
-	public Book(String bookName, Long pageCount, Double price, Long stock) {
+	public Book(String bookName, Long pageCount, Double price, Long stock, String bookImage) {
 		super();
 		this.bookName = bookName;
 		this.pageCount = pageCount;
 		this.price = price;
 		this.stock = stock;
+		this.bookImage = bookImage;
 	}
 
 }

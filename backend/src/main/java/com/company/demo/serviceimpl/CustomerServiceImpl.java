@@ -28,14 +28,14 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer readCustomerById(Long customerId) throws EntityNotFoundException {
+	public Customer readCustomerById(String customerId) throws EntityNotFoundException {
 		Customer customer = this.customerRepository.findById(customerId)
 				.orElseThrow(() -> new EntityNotFoundException("No customer found with id: " + customerId));
 		return customer;
 	}
 
 	@Override
-	public Customer updateCustomerById(Long customerId, Customer customer) throws EntityNotFoundException {
+	public Customer updateCustomerById(String customerId, Customer customer) throws EntityNotFoundException {
 		Customer updatedCustomer = this.readCustomerById(customerId);
 		updatedCustomer.setFirstName(customer.getFirstName());
 		updatedCustomer.setLastName(customer.getLastName());

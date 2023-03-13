@@ -30,7 +30,7 @@ public class AuthorController {
 	}
 
 	@GetMapping("/fetch/{id}")
-	public ResponseEntity<?> readAuthorById(@PathVariable("id") Long authorId) throws EntityNotFoundException {
+	public ResponseEntity<?> readAuthorById(@PathVariable("id") String authorId) throws EntityNotFoundException {
 		Author author = this.authorService.readAuthorById(authorId);
 		return ResponseEntity.status(200).body(author);
 	}

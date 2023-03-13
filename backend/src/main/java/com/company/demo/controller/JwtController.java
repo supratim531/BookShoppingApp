@@ -21,7 +21,7 @@ import com.company.demo.service.CustomUserDetailsService;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/user/auth")
+@RequestMapping("/api/auth")
 public class JwtController {
 
 	@Autowired

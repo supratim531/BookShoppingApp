@@ -10,6 +10,8 @@ public interface AuthorService {
 
 	public List<Author> readAllAuthor() throws NoEntitiesException;
 
-	public Author readAuthorById(Long authorId) throws EntityNotFoundException;
+	public Author readAuthorById(String authorId) throws EntityNotFoundException;
+
+	public Author readAuthorByEmail(String authorEmail) throws EntityNotFoundException;
 
 }

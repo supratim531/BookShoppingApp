@@ -27,7 +27,7 @@ public class AddressServiceImpl implements AddressService {
 	private CustomerRepository customerRepository;
 
 	@Override
-	public Address createAddress(Long customerId, Address address) throws EntityNotFoundException {
+	public Address createAddress(String customerId, Address address) throws EntityNotFoundException {
 		Customer customer = this.customerService.readCustomerById(customerId);
 		address.setCustomer(customer);
 		customer.getAddresses().add(address);
@@ -47,14 +47,14 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public Address readAddressById(Long addressId) throws EntityNotFoundException {
+	public Address readAddressById(String addressId) throws EntityNotFoundException {
 		Address address = this.addressRepository.findById(addressId)
 				.orElseThrow(() -> new EntityNotFoundException("No address found with id: " + addressId));
 		return address;
 	}
 
 	@Override
-	public Address updateAddressById(Long addressId, Address address) throws EntityNotFoundException {
+	public Address updateAddressById(String addressId, Address address) throws EntityNotFoundException {
 		Address updatedAddress = this.readAddressById(addressId);
 		updatedAddress.setName(address.getName());
 		updatedAddress.setState(address.getState());
@@ -70,7 +70,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public String deleteAddressById(Long addressId) throws EntityNotFoundException {
+	public String deleteAddressById(String addressId) throws EntityNotFoundException {
 		Address address = this.readAddressById(addressId);
 		this.addressRepository.deleteById(addressId);
 		String username = this.customerService.readCustomerById(address.getCustomer().getCustomerId()).getUser()

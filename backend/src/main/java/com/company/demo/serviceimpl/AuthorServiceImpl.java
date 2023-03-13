@@ -28,9 +28,16 @@ public class AuthorServiceImpl implements AuthorService {
 	}
 
 	@Override
-	public Author readAuthorById(Long authorId) throws EntityNotFoundException {
+	public Author readAuthorById(String authorId) throws EntityNotFoundException {
 		Author author = this.authorRepository.findById(authorId)
 				.orElseThrow(() -> new EntityNotFoundException("No author found with id: " + authorId));
+		return author;
+	}
+
+	@Override
+	public Author readAuthorByEmail(String authorEmail) throws EntityNotFoundException {
+		Author author = this.authorRepository.findByAuthorEmail(authorEmail)
+				.orElseThrow(() -> new EntityNotFoundException("No author found with email: " + authorEmail));
 		return author;
 	}
 

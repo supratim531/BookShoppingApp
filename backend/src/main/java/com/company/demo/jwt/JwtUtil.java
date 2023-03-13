@@ -15,8 +15,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtil {
 
-	private static final String SECRET_KEY = "amitava";
-	private static final Long JWT_VALIDITY = 7 * 24 * 1440 * 60 * 1000 * 1L;
+	private static final String SECRET_KEY = "bookworm";
+	private static final Long JWT_VALIDITY = 1 * 1 * 7 * 60 * 1000 * 1L;
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);

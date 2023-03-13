@@ -7,10 +7,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -29,9 +30,10 @@ import lombok.NoArgsConstructor;
 public class Author {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GenericGenerator(name = "author_id_generator", strategy = "com.company.demo.generator.AuthorIdGenerator")
+	@GeneratedValue(generator = "author_id_generator")
 	@Column(name = "author_id")
-	private Long authorId;
+	private String authorId;
 
 	@Column(name = "author_name")
 	private String authorName;

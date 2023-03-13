@@ -10,8 +10,8 @@ public interface CustomerService {
 
 	public List<Customer> readAllCustomer() throws NoEntitiesException;
 
-	public Customer readCustomerById(Long customerId) throws EntityNotFoundException;
+	public Customer readCustomerById(String customerId) throws EntityNotFoundException;
 
-	public Customer updateCustomerById(Long customerId, Customer customer) throws EntityNotFoundException;
+	public Customer updateCustomerById(String customerId, Customer customer) throws EntityNotFoundException;
 
 }

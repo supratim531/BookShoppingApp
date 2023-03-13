@@ -8,14 +8,14 @@ import com.company.demo.exception.NoEntitiesException;
 
 public interface AddressService {
 
-	public Address createAddress(Long customerId, Address address) throws EntityNotFoundException;
+	public Address createAddress(String customerId, Address address) throws EntityNotFoundException;
 
 	public List<Address> readAllAddress() throws NoEntitiesException;
 
-	public Address readAddressById(Long addressId) throws EntityNotFoundException;
+	public Address readAddressById(String addressId) throws EntityNotFoundException;
 
-	public Address updateAddressById(Long addressId, Address address) throws EntityNotFoundException;
+	public Address updateAddressById(String addressId, Address address) throws EntityNotFoundException;
 
-	public String deleteAddressById(Long addressId) throws EntityNotFoundException;
+	public String deleteAddressById(String addressId) throws EntityNotFoundException;
 
 }

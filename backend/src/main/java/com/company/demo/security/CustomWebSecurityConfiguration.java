@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,6 +22,7 @@ import com.company.demo.service.CustomUserDetailsService;
 @Configuration
 @EnableWebSecurity
 @SuppressWarnings("deprecation")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String H2 = "/h2db/**";
@@ -38,7 +40,10 @@ public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter
 	protected void configure(HttpSecurity http) throws Exception {
 //		super.configure(http);
 		http.csrf().ignoringAntMatchers(H2).and().headers().frameOptions().sameOrigin();
-		http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpHeaders.ALLOW).permitAll();
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpHeaders.ALLOW).permitAll()
+				.antMatchers(H2, "/api/auth/**", "/api/user/register").permitAll().antMatchers("/",
+						"/api/book/fetch/**", "/api/book/fetch-all", "/api/author/fetch/**", "/api/author/fetch-all")
+				.permitAll().anyRequest().authenticated();
 		http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

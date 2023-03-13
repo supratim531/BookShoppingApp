@@ -10,7 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.company.demo.entity.Author;
 import com.company.demo.entity.Book;
+import com.company.demo.entity.User;
 import com.company.demo.repository.BookRepository;
+import com.company.demo.repository.UserRepository;
 
 @SpringBootApplication
 public class BookShoppingAppApplication {
@@ -18,11 +20,8 @@ public class BookShoppingAppApplication {
 	@Autowired
 	private BookRepository bookRepository;
 
-//	@Autowired
-//	private UserRepository userRepository;
-//
-//	@Autowired
-//	private CustomerRepository customerRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookShoppingAppApplication.class, args);
@@ -31,26 +30,19 @@ public class BookShoppingAppApplication {
 
 	@PostConstruct
 	public void test() {
-//		User sayan = new User("sayan", "sayan123", "USER");
-//		this.userRepository.save(sayan);
-//		Customer csayan = new Customer("S", "M", "M", "1", "s@email", sayan);
-//		this.customerRepository.save(csayan);
+		User arpan = new User("arpan", "arpan123", "ROLE_ADMIN", null);
+		this.userRepository.save(arpan);
 
-		Book java = new Book("Learn Java", 990L, 1250.00, 120L);
-		Book python = new Book("Learn Python", 1100L, 950.00, 90L);
-
+		Book java = new Book("Learn Java", 990L, 1250.00, 120L, "learn-java.png");
 		Author gosling = new Author("James Gosling", "gosling@java.com");
-		Author rossum = new Author("Guido van Rossum", "rossum@python.com");
+		Author rossum = new Author("Guido Van Rossum", "rossum@python.com");
 
+		rossum.setBooks(Arrays.asList(java));
 		gosling.setBooks(Arrays.asList(java));
-		rossum.setBooks(Arrays.asList(java, python));
-
-		python.setAuthors(Arrays.asList(rossum));
 		java.setAuthors(Arrays.asList(gosling, rossum));
 
 		this.bookRepository.save(java);
-		this.bookRepository.save(python);
-		System.out.println("All books and authors are saved");
+		System.out.println("----- 1 ADMIN & BOOK WITH AUTHORS ARE SAVED -----");
 	}
 
 }
