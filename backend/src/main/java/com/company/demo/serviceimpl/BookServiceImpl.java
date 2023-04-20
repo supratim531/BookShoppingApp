@@ -61,4 +61,16 @@ public class BookServiceImpl implements BookService {
 		return book;
 	}
 
+	@Override
+	public Book updateBookById(String bookId, Book book) throws EntityNotFoundException {
+		Book updatedBook = this.readBookById(bookId);
+		updatedBook.setBookName(book.getBookName());
+		updatedBook.setBookImage(book.getBookImage());
+		updatedBook.setPageCount(book.getPageCount());
+		updatedBook.setPrice(book.getPrice());
+		updatedBook.setStock(book.getStock());
+		this.bookRepository.save(updatedBook);
+		return updatedBook;
+	}
+
 }

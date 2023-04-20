@@ -47,6 +47,8 @@ public class OrderServiceImpl implements OrderService {
 
 		quantityCount = 0;
 		books.forEach(book -> {
+			long currentStock = book.getStock() - quantities.get(quantityCount);
+			book.setStock(currentStock);
 			order.getOrderDetails().add(new OrderDetails(quantities.get(quantityCount++), book, order));
 		});
 		this.orderRepository.save(order);
