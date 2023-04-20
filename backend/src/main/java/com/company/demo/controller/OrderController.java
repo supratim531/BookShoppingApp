@@ -35,7 +35,7 @@ public class OrderController {
 		return ResponseEntity.status(201).body(createdOrder);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@GetMapping("/fetch-all")
 	public ResponseEntity<?> readAllOrder() throws NoEntitiesException {
 		List<Order> orders = this.orderService.readAllOrder();

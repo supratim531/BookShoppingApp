@@ -33,16 +33,29 @@ public class BookShoppingAppApplication {
 		User arpan = new User("arpan", "arpan123", "ROLE_ADMIN", null);
 		this.userRepository.save(arpan);
 
-		Book java = new Book("Learn Java", 990L, 1250.00, 120L, "learn-java.png");
-		Author gosling = new Author("James Gosling", "gosling@java.com");
-		Author rossum = new Author("Guido Van Rossum", "rossum@python.com");
+		Author rowling = new Author("J. K. Rowling", "jkrowling.hp@gmail.com");
+		Author stephen = Author.builder().authorName("Stephen King").authorEmail("stephenking@outlook.com").build();
 
-		rossum.setBooks(Arrays.asList(java));
-		gosling.setBooks(Arrays.asList(java));
-		java.setAuthors(Arrays.asList(gosling, rossum));
+		Book harryPotter = new Book("Harry Potter and the Sorcerer's Stone (Book 1)", 780L, 1250.00, 120L,
+				"http://images.amazon.com/images/P/0590353403.01.LZZZZZZZ.jpg");
+		Book theDarkTower2 = Book.builder().bookName("The Drawing of the Three (The Dark Tower, Book 2)")
+				.pageCount(650L).price(900.00).stock(40L)
+				.bookImage("http://images.amazon.com/images/P/0451163524.01.LZZZZZZZ.jpg").build();
+		Book wizardAndGlass = Book.builder().bookName("Wizard and Glass (The Dark Tower, Book 4)").pageCount(788L)
+				.price(540.00).stock(36L).bookImage("http://images.amazon.com/images/P/0451194861.01.LZZZZZZZ.jpg")
+				.build();
 
-		this.bookRepository.save(java);
-		System.out.println("----- 1 ADMIN & BOOK WITH AUTHORS ARE SAVED -----");
+		rowling.setBooks(Arrays.asList(harryPotter));
+		stephen.setBooks(Arrays.asList(theDarkTower2, wizardAndGlass));
+
+		harryPotter.setAuthors(Arrays.asList(rowling));
+		theDarkTower2.setAuthors(Arrays.asList(stephen));
+		wizardAndGlass.setAuthors(Arrays.asList(stephen));
+
+		this.bookRepository.save(harryPotter);
+		this.bookRepository.save(theDarkTower2);
+		this.bookRepository.save(wizardAndGlass);
+		System.out.println("----- 1 ADMIN & 2 BOOK WITH AUTHORS ARE SAVED -----");
 	}
 
 }

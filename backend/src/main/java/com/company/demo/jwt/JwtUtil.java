@@ -16,7 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtUtil {
 
 	private static final String SECRET_KEY = "bookworm";
-	private static final Long JWT_VALIDITY = 1 * 1 * 7 * 60 * 1000 * 1L;
+	private static final Long JWT_VALIDITY = 1 * 1 * 15 * 60 * 1000 * 1L;
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
