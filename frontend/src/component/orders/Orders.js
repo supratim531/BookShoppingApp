@@ -75,7 +75,6 @@ function Orders() {
                       <span>{orderDetail.detailsId}</span>
                       <span>{orderDetail.book?.bookName}</span>
                       <span>{orderDetail.quantity}</span>
-                      <span>{orderDetail.book?.stock}</span>
                       <span>₹{orderDetail.book?.price}</span>
                     </span>
                   )

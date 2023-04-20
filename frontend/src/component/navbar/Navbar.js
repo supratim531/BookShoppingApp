@@ -25,7 +25,7 @@ function Navbar() {
             {(!context.isAdmin) && <NavLink className="" to={"/top-50-books"}><li>Top 50 Books</li></NavLink>}
             {(context.isLogin || context.isAdmin) && <NavLink className="" to={"/account-profile"}><li>Profile</li></NavLink>}
             {(context.isLogin && !context.isAdmin) && <NavLink className="" to={"/orders"}><li>Orders</li></NavLink>}
-            {(!context.isAdmin) && <NavLink className="" to={"/book-cart"}><li>Cart</li></NavLink>}
+            {(!context.isAdmin) && <NavLink className="" to={"/book-cart"}><li>Cart {(context.cartItems.length > 0) && <b>({context.cartItems.length})</b>}</li></NavLink>}
             {(context.isAdmin && context.isLogin) && <NavLink className="" to={"/add-book"}><li>Add Book</li></NavLink>}
             {(!context.isLogin && !context.isAdmin) && <NavLink className="" to={"/login"}><li>Login</li></NavLink>}
             {(!context.isLogin && !context.isAdmin) && <NavLink className="" to={"/signup"}><li>Signup</li></NavLink>}

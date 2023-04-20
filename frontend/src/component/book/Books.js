@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { unauthorizedAxios } from "../../axios/axios";
+import RootContext from "../../context/RootContext";
 
 function Books() {
   const navigate = useNavigate();
+  const context = useContext(RootContext);
   const [books, setBooks] = useState([]);
 
   const goToBookOrder = (bookId, bookName, bookImage, price, book) => {
@@ -26,6 +28,39 @@ function Books() {
     }
   }
 
+  const isItemExistInCart = (bookId) => {
+    if (context.isLogin) {
+      const items = JSON.parse(localStorage.getItem("cart"));
+
+      if (items !== null) {
+        for (let i = 0; i < items.length; ++i) {
+          if (bookId === items[i].bookId) return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  const addBookToCart = (book) => {
+    if (context.isLogin) {
+      const items = JSON.parse(localStorage.getItem("cart"));
+
+      if (items !== null) {
+        items.push(book);
+        context.setCartItems(items);
+        localStorage.setItem("cart", JSON.stringify(items));
+      } else {
+        const items = [];
+        items.push(book);
+        context.setCartItems(items);
+        localStorage.setItem("cart", JSON.stringify(items));
+      }
+    }
+
+    navigate("/book-cart");
+  }
+
   useEffect(() => {
     fetchAllBook();
   }, []);
@@ -39,8 +74,16 @@ function Books() {
               <img className="w-32 h-48" src={book.bookImage} alt="" />
               <span className="w-[200px] text-sm text-center">{book.bookName}</span>
               <span className="text-lg font-medium">₹{book.price}</span>
-              <button className="w-full py-1.5 rounded shadow shadow-slate-600 bg-yellow-400">Add To Cart</button>
-              <button className="w-full py-1.5 rounded shadow shadow-slate-600 bg-orange-600" onClick={() => goToBookOrder(book.bookId, book.bookName, book.bookImage, book.price, book)}>Buy Now</button>
+              {
+                (isItemExistInCart(book.bookId)) ?
+                  <button className="w-full py-2 uppercase font-semibold rounded-sm shadow shadow-slate-600 text-white bg-[#ff9f00]" onClick={() => navigate("/book-cart")}>Go To Cart</button> :
+                  <button className="w-full py-2 uppercase font-semibold rounded-sm shadow shadow-slate-600 text-white bg-[#ff9f00]" onClick={() => addBookToCart(book)}>Add To Cart</button>
+              }
+              {
+                (book.stock <= 0) ?
+                  <button className="w-full py-2 uppercase font-semibold rounded-sm text-slate-600 bg-slate-300" disabled={book.stock <= 0}>Out of Stock</button> :
+                  <button className="w-full py-2 uppercase font-semibold rounded-sm shadow shadow-slate-600 text-white bg-[#fb641b]" onClick={() => goToBookOrder(book.bookId, book.bookName, book.bookImage, book.price, book)}>Buy Now</button>
+              }
             </div>
           )
         }

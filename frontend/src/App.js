@@ -28,6 +28,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const [secretToken, setSecretToken] = useState(null);
 
   const authSetup = () => {
@@ -45,6 +46,7 @@ function App() {
           localStorage.clear();
           setIsAdmin(false);
           setIsLogin(false);
+          setCartItems([]);
         } else {
           console.log("User is logged in");
           setIsLogin(true);
@@ -55,6 +57,7 @@ function App() {
         localStorage.clear();
       }
     } else {
+      setCartItems([]);
       setIsLogin(false);
       setIsAdmin(false);
       localStorage.clear();
@@ -72,6 +75,7 @@ function App() {
     } catch (err) {
       console.log("err", err);
       localStorage.clear();
+      window.location.reload();
     }
   }
 
@@ -93,13 +97,22 @@ function App() {
     fetchUser(jwt, username);
   }
 
+  const updateCartItems = () => {
+    const items = JSON.parse(localStorage.getItem("cart"));
+
+    if (items !== null) {
+      setCartItems(items);
+    }
+  }
+
   useMemo(() => {
     authSetup();
     userSetup();
+    updateCartItems();
   }, []);
 
   return (
-    <RootContext.Provider value={{ user, setUser, isAdmin, isLogin, secretToken, authSetup, userSetup, updateUser }}>
+    <RootContext.Provider value={{ user, setUser, isAdmin, isLogin, cartItems, setCartItems, secretToken, authSetup, userSetup, updateUser }}>
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />}>

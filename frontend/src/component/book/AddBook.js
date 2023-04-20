@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { authorizedAxios } from "../../axios/axios";
 import RootContext from "../../context/RootContext";
 import { stringToHTML } from "../../util/stringToHTML";
+import LoadToaster from "../../component/toaster/LoadToaster";
 
 function AddBook() {
   const navigate = useNavigate();
@@ -21,6 +22,9 @@ function AddBook() {
     authorEmail: ''
   });
   const [totalAuthors, setTotalAuthors] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const addAuthorField = () => {
     const element = `
@@ -40,12 +44,17 @@ function AddBook() {
     try {
       const res = await authorizedAxios(context.secretToken).post("/book/add", payload);
       console.log("res:", res);
+      setIsLoading(false);
+      setSuccessMessage(`Successfully Added Book - '${payload.bookName}'`);
     } catch (err) {
       console.log("err:", err);
+      setIsLoading(false);
+      setErrorMessage("Server Error");
     }
   }
 
   const addNewBook = (e) => {
+    setIsLoading(true);
     const newBook = book;
     newBook.authors = [];
 
@@ -87,6 +96,15 @@ function AddBook() {
   return (
     <div>
       <Helmet><title>Add Some Books | BookWorm</title></Helmet>
+
+      <LoadToaster
+        isLoading={isLoading}
+        loadingMessage={"Adding New Book"}
+        successMessage={successMessage}
+        setSuccessMessage={setSuccessMessage}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
 
       <form className="w-[30%] p-4 flex flex-col space-y-4 bg-red-400" onSubmit={addNewBook}>
         <span className="text-xl font-medium">Add Book</span>

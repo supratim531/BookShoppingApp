@@ -68,7 +68,13 @@ function PlaceOrder() {
               <div className="">
                 {
                   (context.user?.customer.addresses.length === 0) &&
-                  <span className="text-slate-700"><b>{context.user.username}, </b>Add Address(es) to Place Order</span>
+                  <span className="space-x-4 text-slate-700">
+                    <span><b>{context.user.username}, </b>Add Address(es) to Place Order</span>
+                    <span className="p-1 space-x-2 rounded bg-[#d3cfcf]">
+                      <i className="fa-solid fa-circle-exclamation text-red-600"></i>
+                      <span>Required to place order</span>
+                    </span>
+                  </span>
                 }
                 <span className="space-x-0">
                   {
@@ -101,12 +107,16 @@ function PlaceOrder() {
                 <div className="flex flex-col items-center space-y-4">
                   <img className="w-24" src={book?.bookImage} alt="book" />
                   <div className="space-x-4">
-                    <button className="px-1.5 py-0.5 rounded-full border-2 border-black" onClick={() => setQuantity(e => e - 1)}><i className="fa-solid fa-minus"></i></button>
+                    <button className={(quantity > 1) ? "px-1.5 py-0.5 rounded-full border-2 border-black" : "px-1.5 py-0.5 rounded-full border-2 text-slate-400 border-slate-400"} disabled={quantity === 1} onClick={() => setQuantity(e => e - 1)}><i className="fa-solid fa-minus"></i></button>
                     <span className="px-4 py-1 border-2 border-slate-600">{quantity}</span>
-                    <button className="px-1.5 py-0.5 rounded-full border-2 border-black" onClick={() => setQuantity(e => e + 1)}><i className="fa-solid fa-plus"></i></button>
+                    <button className={(quantity < book.stock) ? "px-1.5 py-0.5 rounded-full border-2 border-black" : "px-1.5 py-0.5 rounded-full border-2 text-slate-400 border-slate-400"} disabled={quantity === book.stock} onClick={() => setQuantity(e => e + 1)}><i className="fa-solid fa-plus"></i></button>
                   </div>
+                  {
+                    (quantity === book.stock) &&
+                    <span className="text-sm text-red-600">Reached to it's maximum stock</span>
+                  }
                 </div>
-                <div className="flex flex-col">
+                <div className="relative flex flex-col">
                   <span className="font-medium text-lg">{book?.bookName}</span>
                   {
                     book?.authors?.map(author =>
@@ -116,13 +126,14 @@ function PlaceOrder() {
                   <span>Publisher: N/A</span>
                   <span className="text-lg">{book?.pageCount} Pages</span>
                   <span className="text-lg font-medium">Price: ₹{book?.price}</span>
+                  <span className="absolute bottom-0 text-lg font-medium">Budget: ₹{book?.price * quantity}</span>
                 </div>
               </div>
             </div>
             <div className="">
               {
                 (context.user?.customer.addresses.length > 0) &&
-                <button className="px-6 py-3 rounded shadow shadow-slate-600 text-white bg-orange-500" onClick={submitPlaceOrder}>NOTHING TO PAY - BUY</button>
+                <button className="px-6 py-3 uppercase font-semibold rounded-sm shadow shadow-slate-600 text-white bg-[#fb641b]" onClick={submitPlaceOrder}>NOTHING TO PAY - BUY</button>
               }
             </div>
           </div>

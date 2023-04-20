@@ -23,7 +23,12 @@ function AllBooks() {
       <span>All Books</span>
       {
         books.map(book =>
-          <div key={book.bookId}>{book.bookName}</div>
+          <div key={book.bookId} className="flex space-x-4">
+            <span>{book.bookName}</span>
+            <span>{book.pageCount}</span>
+            <span>{book.stock}</span>
+            <span>₹{book.price}</span>
+          </div>
         )
       }
     </div>

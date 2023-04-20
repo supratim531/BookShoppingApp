@@ -13,13 +13,44 @@ function Cart() {
     }
   });
 
+  const removeItemFromCart = (bookId) => {
+    let itemIndex;
+    const items = JSON.parse(localStorage.getItem("cart"));
+
+    for (let i = 0; i < items.length; ++i) {
+      if (bookId === items[i].bookId) {
+        itemIndex = i;
+        break;
+      }
+    }
+
+    items.splice(itemIndex, 1);
+    context.setCartItems(items);
+    localStorage.setItem("cart", JSON.stringify(items));
+  }
+
   return (
     <div>
       <Helmet><title>Book Shopping Cart | BookWorm</title></Helmet>
 
       {
         (context.isLogin) &&
-        <h1>This is Cart</h1>
+        <div className="">
+          {
+            (context.cartItems.length === 0) && <span>No Cart Item Found</span>
+          }
+          {
+            context.cartItems.map((cartItem, id) =>
+              <div key={cartItem.bookId} className="mx-10 p-2 flex items-center space-x-4">
+                <div className="">{id + 1}.</div>
+                <div className="">{cartItem.bookName}</div>
+                <div className="">{cartItem.pageCount} Pages</div>
+                <div className="">₹{cartItem.price}</div>
+                <button className="px-4 py-1 uppercase rounded-sm shadow-sm shadow-slate-600 text-white bg-red-600" onClick={() => removeItemFromCart(cartItem.bookId)}>Remove</button>
+              </div>
+            )
+          }
+        </div>
       }
 
       {
