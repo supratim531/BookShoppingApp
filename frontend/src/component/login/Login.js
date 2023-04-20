@@ -13,6 +13,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const login = async credential => {
     try {
@@ -20,11 +21,15 @@ function Login() {
       console.log("res:", res);
       const data = res.data;
       const jwt = data.jwt;
+      const userRole = data.user.userRole;
       localStorage.setItem("jwt", JSON.stringify(jwt));
+      localStorage.setItem("role", JSON.stringify(userRole));
+      setIsLoading(false);
+      setSuccessMessage("Successfully Logged In");
       window.location.reload();
     } catch (err) {
-      setIsLoading(false);
       console.log("err:", err);
+      setIsLoading(false);
       setErrorMessage("Server Error");
     }
   }
@@ -47,7 +52,14 @@ function Login() {
     <div>
       <Helmet><title>Login | BookWorm</title></Helmet>
 
-      <LoadToaster isLoading={isLoading} errorMessage={errorMessage} setErrorMessage={setErrorMessage} />
+      <LoadToaster
+        isLoading={isLoading}
+        loadingMessage={"Logging In"}
+        successMessage={successMessage}
+        setSuccessMessage={setSuccessMessage}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       {/* <ErrorToaster message={errorMessage} setMessage={setErrorMessage} /> */}
 
       <form onSubmit={loginUser} className="w-[30%] p-4 flex flex-col space-y-4 bg-red-400">

@@ -8,6 +8,7 @@ function ProtectedRoute(props) {
 
   useEffect(() => {
     if (!context.isLogin) {
+      console.log("Protected Took Place");
       navigate("/login");
     }
   });

@@ -13,15 +13,18 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const register = async credential => {
     try {
       const res = await unauthorizedAxios.post("/user/register", credential);
       console.log("res:", res);
+      setIsLoading(false);
+      setSuccessMessage("Successfully Signed Up");
       navigate("/login");
     } catch (err) {
-      setIsLoading(false);
       console.log("err:", err);
+      setIsLoading(false);
       setErrorMessage("Server Error");
     }
   }
@@ -44,7 +47,14 @@ function Signup() {
     <div>
       <Helmet><title>Signup | BookWorm</title></Helmet>
 
-      <LoadToaster isLoading={isLoading} errorMessage={errorMessage} setErrorMessage={setErrorMessage} />
+      <LoadToaster
+        isLoading={isLoading}
+        loadingMessage={"Signing Up"}
+        successMessage={successMessage}
+        setSuccessMessage={setSuccessMessage}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       {/* <ErrorToaster message={errorMessage} setMessage={setErrorMessage} /> */}
 
       <form onSubmit={registerUser} className="w-[30%] p-4 flex flex-col space-y-4 bg-red-400">

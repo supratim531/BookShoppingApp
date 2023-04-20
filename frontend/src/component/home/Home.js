@@ -1,9 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Helmet from "react-helmet";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import RootContext from "../../context/RootContext";
+import Books from "../book/Books";
 
 function Home() {
+  const navigate = useNavigate();
   const context = useContext(RootContext);
+
+  useEffect(() => {
+    if (!context.isAdmin) {
+      navigate('/');
+    }
+  }, []);
 
   return (
     <div>
@@ -11,12 +20,24 @@ function Home() {
 
       {
         (context.isAdmin) &&
-        <h1>Landing Page: This is admin side</h1>
+        // <h1>Landing Page: This is admin side</h1>
+        <div className="flex flex-col">
+          <div className="p-4 bg-red-400">
+            <ul className="flex space-x-8">
+              <li><NavLink to={""}>All Users</NavLink></li>
+              <li><NavLink to={"all-books"}>All Books</NavLink></li>
+              <li><NavLink to={"all-orders"}>All Orders</NavLink></li>
+            </ul>
+          </div>
+          <div className="p-4 bg-yellow-400">
+            <Outlet />
+          </div>
+        </div>
       }
 
       {
         (!context.isAdmin) &&
-        <h1>Landing Page: This is user or anonymous-user side</h1>
+        <Books />
       }
     </div>
   );

@@ -17,7 +17,10 @@ function Navbar() {
           <span>BookWorm</span>
         </div>
         <div className="bg-teal-400">
-          <ul className="flex items-center space-x-6">
+          <ul className="flex items-center space-x-6" onClick={() => {
+            console.log("NAVBAR CLICKED..!");
+            context.authSetup();
+          }}>
             <NavLink className="" to={'/'}><li>Home</li></NavLink>
             {(!context.isAdmin) && <NavLink className="" to={"/top-50-books"}><li>Top 50 Books</li></NavLink>}
             {(context.isLogin || context.isAdmin) && <NavLink className="" to={"/account-profile"}><li>Profile</li></NavLink>}

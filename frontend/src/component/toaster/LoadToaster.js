@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
-function LoadToaster({ isLoading, errorMessage, setErrorMessage }) {
+function LoadToaster({ isLoading, loadingMessage, successMessage, setSuccessMessage, errorMessage, setErrorMessage }) {
   const toastId = useRef(null);
 
   useEffect(() => {
     if (isLoading) {
-      toastId.current = toast.loading("Please Wait");
+      toastId.current = toast.loading(loadingMessage);
     } else {
-      console.log("DBG:", errorMessage);
+      console.log("LoadToaster:", errorMessage, successMessage);
 
       if (errorMessage !== '') {
         toast.update(toastId.current, {
@@ -18,6 +18,14 @@ function LoadToaster({ isLoading, errorMessage, setErrorMessage }) {
           autoClose: 700
         });
         setErrorMessage('');
+      } else if (successMessage !== '') {
+        toast.update(toastId.current, {
+          type: toast.TYPE.SUCCESS,
+          render: successMessage,
+          isLoading: false,
+          autoClose: 700
+        });
+        setSuccessMessage('');
       }
     }
   }, [isLoading]);
