@@ -53,7 +53,7 @@ public class Book {
 	@Column(name = "book_image")
 	private String bookImage;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "book_author", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "author_id") })
 	private List<Author> authors = new ArrayList<>();

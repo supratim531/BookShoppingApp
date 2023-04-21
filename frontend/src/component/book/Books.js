@@ -7,6 +7,8 @@ function Books() {
   const navigate = useNavigate();
   const context = useContext(RootContext);
   const [books, setBooks] = useState([]);
+  const [searchBooks, setSearchBooks] = useState('');
+  const [filteredBooks, setFilteredBooks] = useState([]);
 
   const goToBookOrder = (bookId, bookName, bookImage, price, book) => {
     const params = { bookId, bookName, bookImage, price };
@@ -23,6 +25,7 @@ function Books() {
       const res = await unauthorizedAxios.get("/book/fetch-all");
       console.log("res:", res);
       setBooks(res.data);
+      setFilteredBooks(res.data);
     } catch (err) {
       console.log("err:", err);
     }
@@ -61,18 +64,34 @@ function Books() {
     navigate("/book-cart");
   }
 
+  const filterBooks = () => {
+    const searchedBooks = books.filter(book => {
+      return book.bookName.toLowerCase().match(searchBooks.toLowerCase()) ||
+        book.authors[0].authorName.toLowerCase().match(searchBooks.toLowerCase());
+    });
+    setFilteredBooks(searchedBooks);
+  }
+
   useEffect(() => {
     fetchAllBook();
   }, []);
 
+  useEffect(() => {
+    filterBooks();
+  }, [searchBooks]);
+
   return (
-    <div className="m-4">
+    <div className="m-4 space-y-4">
+      <div className="p-2 flex justify-end">
+        <input className="w-[35%] px-4 py-2 text-lg rounded outline-none shadow shadow-slate-400 text-blue-600" type="text" name="search" id="search" value={searchBooks} onChange={(e) => setSearchBooks(e.target.value)} placeholder="Search Book Here" />
+      </div>
       <div className="sm:container sm:mx-auto flex flex-wrap space-x-10">
         {
-          books.map(book =>
+          filteredBooks.map(book =>
             <div key={book.bookId} className="p-2 flex flex-col items-center space-y-2 border-2 border-slate-400 rounded-md">
               <img className="w-32 h-48" src={book.bookImage} alt="" />
               <span className="w-[200px] text-sm text-center">{book.bookName}</span>
+              <span className="font-medium text-slate-600">~ {book?.authors[0].authorName}</span>
               <span className="text-lg font-medium">₹{book.price}</span>
               {
                 (isItemExistInCart(book.bookId)) ?

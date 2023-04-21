@@ -105,7 +105,7 @@ function PlaceOrder() {
               <span className="uppercase font-medium text-slate-500">Order Summary <span><i className="fa-solid fa-check text-blue-600"></i></span></span>
               <div className="flex space-x-10">
                 <div className="flex flex-col items-center space-y-4">
-                  <img className="w-24" src={book?.bookImage} alt="book" />
+                  <img className="mb-4 w-24" src={book?.bookImage} alt="book" />
                   <div className="space-x-4">
                     <button className={(quantity > 1) ? "px-1.5 py-0.5 rounded-full border-2 border-black" : "px-1.5 py-0.5 rounded-full border-2 text-slate-400 border-slate-400"} disabled={quantity === 1} onClick={() => setQuantity(e => e - 1)}><i className="fa-solid fa-minus"></i></button>
                     <span className="px-4 py-1 border-2 border-slate-600">{quantity}</span>

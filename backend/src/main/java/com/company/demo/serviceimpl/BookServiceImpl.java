@@ -73,4 +73,11 @@ public class BookServiceImpl implements BookService {
 		return updatedBook;
 	}
 
+	@Override
+	public String deleteBookById(String bookId) throws EntityNotFoundException {
+		Book book = this.readBookById(bookId);
+		this.bookRepository.deleteById(bookId);
+		return "Deleted book - " + book.getBookId() + ": " + book.getBookName();
+	}
+
 }

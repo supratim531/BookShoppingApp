@@ -16,4 +16,6 @@ public interface BookService {
 
 	public Book updateBookById(String bookId, Book book) throws EntityNotFoundException;
 
+	public String deleteBookById(String bookId) throws EntityNotFoundException;
+
 }
