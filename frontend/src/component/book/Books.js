@@ -15,7 +15,6 @@ function Books() {
 
     navigate({
       pathname: "/place-order",
-      state: book,
       search: `?${createSearchParams(params)}`
     }, { state: book });
   }
