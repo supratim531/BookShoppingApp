@@ -23,6 +23,7 @@ import AllUsers from "./component/home/AllUsers";
 import AllBooks from "./component/home/AllBooks";
 import AdminProfile from "./component/profile/AdminProfile";
 import { authorizedAxios } from "./axios/axios";
+import Book from "./component/book/Book";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -120,6 +121,7 @@ function App() {
           <Route path="/all-books" element={<AllBooks />} />
           <Route path="/all-orders" element={<AllOrders />} />
         </Route>
+        <Route path="/book/:bookName" element={<Book />} />
         <Route path="/top-50-books" element={<TopBooks />} />
         <Route path="/account-profile/" element={<ProtectedRoute component={Profile} />}>
           <Route path='' element={(isAdmin) ? <AdminProfile /> : <CustomerProfile />} />
