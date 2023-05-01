@@ -117,12 +117,15 @@ function PlaceOrder() {
                   }
                 </div>
                 <div className="relative flex flex-col">
-                  <span className="font-medium text-lg">{book?.bookName}</span>
-                  {
-                    book?.authors?.map(author =>
-                      <span key={author.authorId} className="text-slate-500">{author.authorName}, </span>
-                    )
-                  }
+                  <span className="font-medium text-lg text-slate-900">{book?.bookName}</span>
+                  <div>
+                    <span className="font-medium">Author(s): </span>
+                    {
+                      book?.authors?.map((author, id) =>
+                        <span key={author.authorId} className="text-slate-500">{author.authorName}{((book?.authors.length - 1) === id) ? '' : ", "}</span>
+                      )
+                    }
+                  </div>
                   <span>Publisher: N/A</span>
                   <span className="text-lg">{book?.pageCount} Pages</span>
                   <span className="text-lg font-medium">Price: ₹{book?.price}</span>
