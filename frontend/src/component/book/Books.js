@@ -40,7 +40,7 @@ function Books() {
       <div className="p-2 flex justify-end">
         <input className="w-[35%] px-4 py-2 text-lg rounded outline-none shadow shadow-slate-400 text-blue-600" type="text" name="search" id="search" value={searchBooks} onChange={(e) => setSearchBooks(e.target.value)} placeholder="Search Book Here" />
       </div>
-      <div className="sm:container sm:mx-auto flex flex-wrap space-x-10">
+      <div className="sm:container sm:mx-auto flex flex-wrap justify-center gap-4">
         {
           filteredBooks.map(book =>
             <div key={book.bookId} className="p-2 flex flex-col items-center space-y-2 rounded-sm border border-slate-400">

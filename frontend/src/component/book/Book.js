@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { createSearchParams, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { unauthorizedAxios } from "../../axios/axios";
+import { recommenderAxios, unauthorizedAxios } from "../../axios/axios";
 import RootContext from "../../context/RootContext";
 
 function Book() {
@@ -9,6 +9,21 @@ function Book() {
   const navigate = useNavigate();
   const context = useContext(RootContext);
   const [book, setBook] = useState(null);
+  const [books, setBooks] = useState([]);
+
+  const fetchAllSimilarBooks = async bookName => {
+    try {
+      const res = await recommenderAxios.get(`/recommend-books-info/${bookName}`);
+      console.log("res:", res);
+      const books = res.data;
+
+      if (books?.data !== null) {
+        setBooks(books);
+      }
+    } catch (err) {
+      console.log("err:", err);
+    }
+  }
 
   const goToBookOrder = (bookId, bookName, bookImage, price, book) => {
     const params = { bookId, bookName, bookImage, price };
@@ -63,6 +78,7 @@ function Book() {
       }
 
       setBook(book);
+      fetchAllSimilarBooks(book.bookName);
     } catch (err) {
       console.log("err:", err);
       navigate('/');
@@ -155,6 +171,21 @@ function Book() {
         <hr />
         <div className="px-6 py-4">
           <h1 className="font-medium text-2xl text-slate-900">Similar Books</h1>
+          <div className="mt-4">
+            <div className="sm:container sm:mx-auto flex flex-wrap justify-center gap-4">
+              {
+                (books.length !== 0) ?
+                  books?.map((book, id) =>
+                    <div key={id} className="p-2 flex flex-col items-center space-y-2 rounded-sm border border-slate-400">
+                      <img className="w-32 h-48 border duration-150 hover:scale-125" src={book?.bookImage} alt="" />
+                      <span className="w-[200px] text-sm text-center">{book?.bookName}</span>
+                      <span className="font-medium text-slate-600">~ {book?.author}</span>
+                    </div>
+                  ) :
+                  <span className="text-lg opacity-50">No similar book found</span>
+              }
+            </div>
+          </div>
         </div>
       </div>
     </div>

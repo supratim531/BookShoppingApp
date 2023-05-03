@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const baseAPI = "http://localhost:8888/api";
+const recommenderAPI = "http://localhost:8000/api";
 
 export const authorizedAxios = (jwt) => axios.create({
   baseURL: baseAPI,
@@ -16,4 +17,8 @@ export const unauthorizedAxios = axios.create({
   headers: {
     "Access-Control-Allow-Origin": '*'
   }
+});
+
+export const recommenderAxios = axios.create({
+  baseURL: recommenderAPI
 });
