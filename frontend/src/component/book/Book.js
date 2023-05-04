@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import Helmet from "react-helmet";
 import { createSearchParams, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { recommenderAxios, unauthorizedAxios } from "../../axios/axios";
 import RootContext from "../../context/RootContext";
@@ -100,6 +101,8 @@ function Book() {
 
   return (
     <div>
+      <Helmet><title>{(book) ? book.bookName : "Loading..."} | BookWorm</title></Helmet>
+
       <div className="mx-6 flex">
         <div className="flex flex-col space-y-2">
           <div className="px-20 py-8 rounded-sm outline outline-1 outline-slate-300">

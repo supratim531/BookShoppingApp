@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Helmet from "react-helmet";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RootContext from "../../context/RootContext";
 
 function Cart() {
@@ -43,7 +43,7 @@ function Cart() {
             context.cartItems.map((cartItem, id) =>
               <div key={cartItem.bookId} className="mx-10 p-2 flex items-center space-x-4">
                 <div className="">{id + 1}.</div>
-                <div className="">{cartItem.bookName}</div>
+                <Link to={`/book/${cartItem.bookName.replaceAll(' ', '-')}?bookId=${cartItem.bookId}`}><div className="cursor-pointer hover:text-blue-600">{cartItem.bookName}</div></Link>
                 <div className="">{cartItem.pageCount} Pages</div>
                 <div className="">₹{cartItem.price}</div>
                 <button className="px-4 py-1 uppercase rounded-sm shadow-sm shadow-slate-600 text-white bg-red-600" onClick={() => removeItemFromCart(cartItem.bookId)}>Remove</button>

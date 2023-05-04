@@ -27,10 +27,12 @@ function Assistant() {
       acceptanceSound.play();
       setVoiceOver(true);
       setTimeout(() => {
-        if (transcript.toLowerCase() === "harry potter") {
+        if (transcript.toLowerCase().match("harry potter")) {
           navigate("/book/Harry-Potter-and-the-Sorcerer's-Stone-(Book-1)?bookId=BWBK17601");
+        } else if (transcript.toLowerCase().match("the dark tower")) {
+          navigate("/book/The-Drawing-of-the-Three-(The-Dark-Tower,-Book-2)?bookId=BWBK17602");
         } else {
-          alert("Do not understand");
+          alert("Do not understand | Couldn't find");
         }
       }, 400);
     }
