@@ -54,6 +54,14 @@ function TopBooks() {
         </div>
         <div className="sm:container sm:mx-auto flex flex-wrap justify-center gap-4">
           {
+            filteredBooks.length === 0 &&
+            <div className="spinner-container">
+              <div className="mx-1 loading-spinner">
+              </div>
+              <span className="">Loading...</span>
+            </div>
+          }
+          {
             filteredBooks.map((book, id) =>
               <div key={id} className="p-2 flex flex-col items-center space-y-2 rounded-sm border border-slate-400">
                 <img className="w-32 h-48 border duration-150 hover:scale-125" src={book?.bookImage} alt="" />

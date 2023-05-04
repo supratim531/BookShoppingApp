@@ -42,6 +42,14 @@ function Books() {
       </div>
       <div className="sm:container sm:mx-auto flex flex-wrap justify-center gap-4">
         {
+          filteredBooks.length === 0 &&
+          <div className="spinner-container">
+            <div className="mx-1 loading-spinner">
+            </div>
+            <span className="">Loading...</span>
+          </div>
+        }
+        {
           filteredBooks.map(book =>
             <div key={book.bookId} className="p-2 flex flex-col items-center space-y-2 rounded-sm border border-slate-400">
               <Link to={`/book/${book.bookName.replaceAll(' ', '-')}?bookId=${book.bookId}`}>
