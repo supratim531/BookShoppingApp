@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Helmet from "react-helmet";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import RootContext from "../../context/RootContext";
 import AdminProfile from "./AdminProfile";
 
@@ -35,9 +35,9 @@ function Profile() {
         <div>
           <div className="flex">
             <div className="p-4 bg-red-400">
-              <ul>
-                <li><NavLink to={''}>Profile Information</NavLink></li>
-                <li><NavLink to={"address"}>Manage Addresses</NavLink></li>
+              <ul className="">
+                <li><Link to={''}>Profile Information</Link></li>
+                <li><Link to={"address"}>Manage Addresses</Link></li>
               </ul>
             </div>
             <div className="p-4 bg-blue-400">

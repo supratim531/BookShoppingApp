@@ -50,7 +50,7 @@ function Books() {
         {
           (filteredBooks.length === 0 && books.length !== 0) &&
           <div className="spinner-container">
-            <span className="">No result found of "<b>{searchBooks}</b>"</span>
+            <span className="">No result found for "<b>{searchBooks}</b>"</span>
           </div>
         }
         {

@@ -61,7 +61,7 @@ function Signup() {
         <span className="text-xl font-medium">Sign Up</span>
         <input type="text" name="username" id="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="username" />
         <input type="password" name="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" />
-        <button type="submit" className="px-6 py-1.5 rounded bg-sky-500">Signup</button>
+        <button type="submit" className="px-6 py-1.5 rounded text-white bg-sky-600">Signup</button>
         <span>Need to <Link className="text-blue-800" to={"/login"}>login?</Link></span>
       </form>
     </div>

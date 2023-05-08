@@ -158,7 +158,7 @@ function Cart() {
                     <div className="flex flex-col justify-center items-center">
                       <img className="w-60" src={"https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"} alt="" />
                       <div className="mt-4 text-lg text-slate-800">Your cart is empty!</div>
-                      <div className="mt-2 text-sm text-slate-600">Add items to it now.</div>
+                      <div className="mt-2 text-sm text-slate-600">Add books to it now.</div>
                       <button className="mt-2 px-16 py-2 rounded-sm shadow-sm shadow-slate-600 text-sm text-white bg-[#2874f0]" onClick={() => navigate("/")}>Shop Now</button>
                     </div>
                   }
