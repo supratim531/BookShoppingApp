@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Home from "./component/home/Home";
 import Cart from "./component/cart/Cart";
 import Login from "./component/login/Login";
@@ -22,11 +22,12 @@ import AllOrders from "./component/home/AllOrders";
 import AllUsers from "./component/home/AllUsers";
 import AllBooks from "./component/home/AllBooks";
 import AdminProfile from "./component/profile/AdminProfile";
-import { authorizedAxios } from "./axios/axios";
+import { authorizedAxios, unauthorizedAxios } from "./axios/axios";
 import Book from "./component/book/Book";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [books, setBooks] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [cartItems, setCartItems] = useState([]);
@@ -98,22 +99,54 @@ function App() {
     fetchUser(jwt, username);
   }
 
+  const fetchAllBook = async () => {
+    try {
+      const res = await unauthorizedAxios.get("/book/fetch-all");
+      console.log("res:", res);
+      const books = res.data;
+      setBooks(books);
+      const items = JSON.parse(localStorage.getItem("cart"));
+
+      if (items !== null) {
+        items.forEach((item, id) => {
+          const book = books.find(book => book.bookId === item.bookId);
+
+          if (book) {
+            items[id] = book;
+          }
+        });
+
+        console.log("Updated cart items:", items);
+        setCartItems(items);
+      }
+    } catch (err) {
+      console.log("err:", err);
+    }
+  }
+
   const updateCartItems = () => {
     const items = JSON.parse(localStorage.getItem("cart"));
 
-    if (items !== null) {
-      setCartItems(items);
+    if (books.length !== 0 && items !== null) {
+      fetchAllBook();
     }
   }
+
+  useEffect(() => {
+    fetchAllBook();
+  }, []);
+
+  useEffect(() => {
+    updateCartItems();
+  }, [books.length]);
 
   useMemo(() => {
     authSetup();
     userSetup();
-    updateCartItems();
   }, []);
 
   return (
-    <RootContext.Provider value={{ user, setUser, isAdmin, isLogin, cartItems, setCartItems, secretToken, authSetup, userSetup, updateUser }}>
+    <RootContext.Provider value={{ user, books, setUser, isAdmin, isLogin, cartItems, setCartItems, secretToken, authSetup, userSetup, updateUser, updateCartItems }}>
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />}>

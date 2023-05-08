@@ -3,8 +3,11 @@ import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognitio
 import VoiceToaster from "../toaster/VoiceToaster";
 import sound from "../../assets/accept.mp3";
 import { useNavigate } from "react-router-dom";
+import { recommenderAxios } from "../../axios/axios";
+import useSpeechSynthesis from "react-speech-kit/dist/useSpeechSynthesis";
 
 function Assistant() {
+  const { speak } = useSpeechSynthesis();
   const {
     transcript,
     listening,
@@ -12,6 +15,42 @@ function Assistant() {
   } = useSpeechRecognition();
   const navigate = useNavigate();
   const [voiceOver, setVoiceOver] = useState(true);
+
+  const takeAction = (query, result) => {
+    if (result === "harry-potter") {
+      const responses = [
+        "Here it is, check this once.",
+        "I have got this one for you.",
+        "Here is a book of Harry Potter.",
+        "I have found this, hope you will like it.",
+        "I have tried to find some of Harry Potter."
+      ];
+      const random = Math.floor(Math.random() * responses.length);
+
+      navigate("/book/Harry-Potter-and-the-Sorcerer's-Stone-(Book-1)?bookId=BWBK17601");
+
+      if (query.match("rowling")) {
+        speak({ text: responses[3] });
+      } else {
+        speak({ text: responses[random] });
+      }
+    } else if (result === "the-dark-tower") {
+      navigate("/book/The-Drawing-of-the-Three-(The-Dark-Tower,-Book-2)?bookId=BWBK17602");
+    }
+  }
+
+  const fetchAssistantAnswer = async query => {
+    try {
+      const res = await recommenderAxios.get(`/assistant-response?query=${query}`);
+      console.log("res:", res);
+      const result = res.data.data;
+      setVoiceOver(true);
+      takeAction(query, result);
+    } catch (err) {
+      console.log("err:", err);
+      setVoiceOver(true);
+    }
+  }
 
   useEffect(() => {
     console.log("Mic supported:", browserSupportsSpeechRecognition);
@@ -25,16 +64,7 @@ function Assistant() {
     if (!listening && !voiceOver) {
       const acceptanceSound = new Audio(sound);
       acceptanceSound.play();
-      setVoiceOver(true);
-      setTimeout(() => {
-        if (transcript.toLowerCase().match("harry potter")) {
-          navigate("/book/Harry-Potter-and-the-Sorcerer's-Stone-(Book-1)?bookId=BWBK17601");
-        } else if (transcript.toLowerCase().match("the dark tower")) {
-          navigate("/book/The-Drawing-of-the-Three-(The-Dark-Tower,-Book-2)?bookId=BWBK17602");
-        } else {
-          alert("Do not understand | Couldn't find");
-        }
-      }, 400);
+      fetchAssistantAnswer(transcript);
     }
   }, [listening]);
 

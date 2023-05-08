@@ -29,7 +29,7 @@ function Home() {
               <li><NavLink to={"all-orders"}>All Orders</NavLink></li>
             </ul>
           </div>
-          <div className="p-4 bg-yellow-400">
+          <div className="p-4">
             <Outlet />
           </div>
         </div>

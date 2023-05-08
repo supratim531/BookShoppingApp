@@ -63,20 +63,29 @@ function Orders() {
     <div>
       <Helmet><title>Your Order's History | BookWorm</title></Helmet>
 
-      <h1>Orders</h1>
-      <div className="">
+      <h1 className="mx-2 text-4xl">Orders</h1>
+      <hr className="mb-1" />
+      <div className="mx-2">
+        {
+          (orders.length === 0) &&
+          <span className="select-none mt-2 opacity-60">No order is placed</span>
+        }
         {
           orders?.map(order =>
             <div key={order.orderId} className="">
               <div>
                 {
                   order.orderDetails?.map(orderDetail =>
-                    <span key={orderDetail.detailsId} className="space-x-6">
-                      <span>{orderDetail.detailsId}</span>
-                      <span>{orderDetail.book?.bookName}</span>
-                      <span>{orderDetail.quantity}</span>
-                      <span>₹{orderDetail.book?.price}</span>
-                    </span>
+                    <div key={orderDetail.detailsId} className="">
+                      <div className="font-semibold">{orderDetail.detailsId}</div>
+                      <span className="flex items-center space-x-6">
+                        <span><img className="w-10 h-12" src={orderDetail.book?.bookImage} alt="" /></span>
+                        <span className="font-medium text-blue-700">({orderDetail.quantity})</span>
+                        <span>{orderDetail.book?.bookName}</span>
+                        <span>₹{orderDetail.book?.price}</span>
+                      </span>
+                      <br />
+                    </div>
                   )
                 }
               </div>

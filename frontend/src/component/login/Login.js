@@ -66,9 +66,9 @@ function Login() {
         <span className="text-xl font-medium text-right">Log In</span>
         <input type="text" name="username" id="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="username" />
         <input type="password" name="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" />
-        <button type="submit" className="px-6 py-1.5 rounded bg-sky-500">Login</button>
-        <span className="text-xl font-medium uppercase text-center">OR</span>
-        <button onClick={() => navigate("face-recognition")} className="px-6 py-1.5 rounded bg-amber-500">Face Recognition</button>
+        <button type="submit" className="px-6 py-1.5 rounded text-white bg-green-600">Login</button>
+        {/* <span className="text-xl font-medium uppercase text-center">OR</span>
+        <button onClick={() => navigate("face-recognition")} className="px-6 py-1.5 rounded bg-amber-500">Face Recognition</button> */}
         <span>Need a <Link className="text-blue-800" to={"/signup"}>signup?</Link></span>
       </form>
     </div>

@@ -22,7 +22,12 @@ function AllOrders() {
 
   return (
     <div>
-      <span>All Orders</span>
+      <h1 className="text-4xl">Orders</h1>
+      <hr className="mb-1" />
+      {
+        (orders.length === 0) &&
+        <span className="select-none mt-2 opacity-60">No order is placed</span>
+      }
       {
         orders?.map(order =>
           <div className="" key={order.orderId}>

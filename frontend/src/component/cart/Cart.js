@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
+import { authorizedAxios } from "../../axios/axios";
 import RootContext from "../../context/RootContext";
+import NewSuccessToaster from "../toaster/NewSuccessToaster";
 import "./cart.css";
 
 function Cart() {
@@ -10,6 +12,7 @@ function Cart() {
   const [addressId, setAddressId] = useState('');
   const [quantities, setQuantities] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const updateQuantity = (index, operator, indexPrice) => {
     let newQuantities = [...quantities]; // copying the old datas array
@@ -34,6 +37,37 @@ function Cart() {
     setQuantities(newQuantities);
     setTotalPrice(e => e - (book.price * quantities[id]));
     localStorage.setItem("cart", JSON.stringify(items));
+    setSuccessMessage(`Removed book ${book.bookName} from cart successfully`);
+  }
+
+  const placeOrder = async (addressId, payload) => {
+    try {
+      const res = await authorizedAxios(context.secretToken).post(`/order/place-order?addressId=${addressId}`, payload);
+      console.log("res:", res);
+      context.updateUser(context.secretToken, context.user.username);
+      navigate('/');
+    } catch (err) {
+      console.log("err:", err);
+    }
+  }
+
+  const submitPlaceOrder = () => {
+    const orderPayload = [[], []];
+
+    context.cartItems.forEach(e => {
+      if (e.stock !== 0) {
+        orderPayload[0].push(e.bookId);
+      }
+    });
+
+    context.cartItems.forEach((e, id) => {
+      if (e.stock !== 0) {
+        orderPayload[1].push(quantities[id]);
+      }
+    });
+
+    console.log(addressId, orderPayload);
+    placeOrder(addressId, orderPayload);
   }
 
   useEffect(() => {
@@ -50,18 +84,28 @@ function Cart() {
       let newQuantities = [];
 
       context.cartItems.forEach(e => {
-        totalPrice += e.price;
+        if (e.stock !== 0) {
+          totalPrice += e.price;
+        }
+
         newQuantities.push(1);
       });
 
       setTotalPrice(totalPrice);
       setQuantities(newQuantities);
+      console.log("BARBAR");
     }
-  }, [context.user]);
+  }, [context.cartItems, context.user, context.books.length]);
+
+  useEffect(() => {
+    context.updateCartItems();
+  }, []);
 
   return (
     <div>
       <Helmet><title>Book Shopping Cart | BookWorm</title></Helmet>
+
+      {(successMessage !== '') && <NewSuccessToaster message={successMessage} setMessage={setSuccessMessage} />}
 
       {
         (context.isLogin) &&
@@ -124,43 +168,55 @@ function Cart() {
                       <div className="books h-[320px] overflow-y-scroll">
                         {
                           context.cartItems.map((cartItem, id) =>
-                            <div key={cartItem?.bookId} className="">
-                              <div className="flex space-x-10">
-                                <div className="flex flex-col items-center space-y-4">
-                                  <Link to={`/book/${cartItem.bookName.replaceAll(' ', '-')}?bookId=${cartItem.bookId}`}>
-                                    <img className="mb-4 w-24 border" src={cartItem?.bookImage} alt="book" />
-                                  </Link>
-                                  <div className="space-x-4">
-                                    <button className={(quantities[id] > 1) ? "px-1.5 py-0.5 rounded-full border-2 border-black" : "px-1.5 py-0.5 rounded-full border-2 text-slate-400 border-slate-400"} disabled={quantities[id] === 1} onClick={() => updateQuantity(id, '-', cartItem.price)}><i className="fa-solid fa-minus"></i></button>
-                                    <span className="px-4 py-1 border-2 border-slate-600">{quantities[id]}</span>
-                                    <button className={(quantities[id] < cartItem.stock) ? "px-1.5 py-0.5 rounded-full border-2 border-black" : "px-1.5 py-0.5 rounded-full border-2 text-slate-400 border-slate-400"} disabled={quantities[id] === cartItem.stock} onClick={() => updateQuantity(id, '+', cartItem.price)}><i className="fa-solid fa-plus"></i></button>
+                            <div key={cartItem?.bookId} className="relative">
+                              {
+                                (cartItem?.stock <= 0) &&
+                                <>
+                                  <div className="absolute h-full w-full opacity-80 bg-black">
                                   </div>
-                                  {
-                                    (quantities[id] === cartItem.stock) &&
-                                    <span className="text-sm text-red-600">Reached to it's maximum stock</span>
-                                  }
-                                </div>
-                                <div className="relative flex flex-col">
-                                  <Link to={`/book/${cartItem.bookName.replaceAll(' ', '-')}?bookId=${cartItem.bookId}`}>
-                                    <span className="font-medium text-lg text-slate-900 hover:text-blue-600">{cartItem?.bookName}</span>
-                                  </Link>
-                                  <div>
-                                    <span className="font-medium">Author(s): </span>
+                                  <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+                                    <span className="px-6 py-2 rounded-sm bg-white">Not Available</span>
+                                  </div>
+                                </>
+                              }
+                              <div className="">
+                                <div className="flex space-x-10">
+                                  <div className="flex flex-col items-center space-y-4">
+                                    <Link to={`/book/${cartItem.bookName.replaceAll(' ', '-')}?bookId=${cartItem.bookId}`}>
+                                      <img className="mb-4 w-24 border" src={cartItem?.bookImage} alt="book" />
+                                    </Link>
+                                    <div className="space-x-4">
+                                      <button className={(quantities[id] > 1) ? "px-1.5 py-0.5 rounded-full border-2 border-black" : "px-1.5 py-0.5 rounded-full border-2 text-slate-400 border-slate-400"} disabled={quantities[id] === 1} onClick={() => updateQuantity(id, '-', cartItem.price)}><i className="fa-solid fa-minus"></i></button>
+                                      <span className="px-4 py-1 border-2 border-slate-600">{cartItem?.stock === 0 ? 0 : quantities[id]}</span>
+                                      <button className={(quantities[id] < cartItem.stock) ? "px-1.5 py-0.5 rounded-full border-2 border-black" : "px-1.5 py-0.5 rounded-full border-2 text-slate-400 border-slate-400"} disabled={quantities[id] >= cartItem.stock} onClick={() => updateQuantity(id, '+', cartItem.price)}><i className="fa-solid fa-plus"></i></button>
+                                    </div>
                                     {
-                                      cartItem?.authors?.map((author, id) =>
-                                        <span key={author.authorId} className="text-slate-500">{author.authorName}{((cartItem?.authors.length - 1) === id) ? '' : ", "}</span>
-                                      )
+                                      (quantities[id] >= cartItem.stock && cartItem.stock !== 0) &&
+                                      <div className="text-sm text-red-600">Reached to it's maximum stock</div>
                                     }
                                   </div>
-                                  <span>Publisher: N/A</span>
-                                  <span className="text-lg">{cartItem?.pageCount} Pages</span>
-                                  <span className="text-lg font-medium">Price: ₹{cartItem?.price}</span>
-                                  <div className="absolute bottom-0 uppercase cursor-pointer text-lg hover:text-blue-600" onClick={() => removeItemFromCart(id, cartItem)}>Remove</div>
+                                  <div className="relative flex flex-col">
+                                    <Link to={`/book/${cartItem.bookName.replaceAll(' ', '-')}?bookId=${cartItem.bookId}`}>
+                                      <span className="font-medium text-lg text-slate-900 hover:text-blue-600">{cartItem?.bookName}</span>
+                                    </Link>
+                                    <div>
+                                      <span className="font-medium">Author(s): </span>
+                                      {
+                                        cartItem?.authors?.map((author, id) =>
+                                          <span key={author.authorId} className="text-slate-500">{author.authorName}{((cartItem?.authors.length - 1) === id) ? '' : ", "}</span>
+                                        )
+                                      }
+                                    </div>
+                                    <span>Publisher: N/A</span>
+                                    <span className="text-lg">{cartItem?.pageCount} Pages</span>
+                                    <span className="text-lg font-medium">Price: ₹{cartItem?.price}</span>
+                                    <div className="absolute bottom-0 uppercase cursor-pointer text-lg hover:text-blue-600" onClick={() => removeItemFromCart(id, cartItem)}>Remove</div>
+                                  </div>
                                 </div>
+                                {
+                                  ((context.cartItems.length - 1) !== id) && <hr className="my-6" />
+                                }
                               </div>
-                              {
-                                ((context.cartItems.length - 1) !== id) && <hr className="my-6" />
-                              }
                             </div>
                           )
                         }
@@ -168,7 +224,7 @@ function Cart() {
                       {
                         (context.user?.customer.addresses.length > 0) &&
                         <div className="px-4 pt-7 pb-1 mt-2 flex justify-end border-t-2">
-                          <button className="px-8 py-4 uppercase font-semibold rounded-sm shadow-sm shadow-slate-600 text-white bg-[#fb641b]">NOTHING TO PAY - BUY</button>
+                          <button className="px-8 py-4 uppercase font-semibold rounded-sm shadow-sm shadow-slate-600 text-white bg-[#fb641b]" onClick={submitPlaceOrder}>NOTHING TO PAY - BUY</button>
                         </div>
                       }
                     </div>

@@ -54,11 +54,16 @@ function TopBooks() {
         </div>
         <div className="sm:container sm:mx-auto flex flex-wrap justify-center gap-4">
           {
-            filteredBooks.length === 0 &&
+            (books.length === 0) &&
             <div className="spinner-container">
-              <div className="mx-1 loading-spinner">
-              </div>
+              <div className="mx-1 loading-spinner"></div>
               <span className="">Loading...</span>
+            </div>
+          }
+          {
+            (filteredBooks.length === 0 && books.length !== 0) &&
+            <div className="spinner-container">
+              <span className="">No result found of "<b>{searchBooks}</b>"</span>
             </div>
           }
           {
