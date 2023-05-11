@@ -1,6 +1,0 @@
-Recommendation System
-
-1. Popularity Based (formula based -> may vary)
-2. Content Based (content or product based -> similarity of items)
-3. Collaborative Filtering Based (user's rating based -> dimension approach)
-4. Hybrid Recommendation System (not to be intended)
