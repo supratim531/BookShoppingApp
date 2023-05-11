@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import RootContext from "../../context/RootContext";
+import logo from "../../assets/navlogo.png";
 import "./navbar.css";
 
 function Navbar() {
@@ -13,10 +14,11 @@ function Navbar() {
   }
 
   return (
-    <nav className="mb-2 p-2 text-white bg-[#2874f0]">
+    <nav className="z-10 w-full sticky top-0 mb-2 p-2 shadow-sm shadow-slate-600 text-white bg-[#2874f0]">
       <div className="p-2 flex justify-between items-center">
         <div className="px-2 font-medium text-lg cursor-pointer" onClick={() => navigate('/')}>
-          <span>BookWorm</span>
+          <img className="w-32 rounded-sm" src={logo} alt="" />
+          {/* <span>BookWorm</span> */}
         </div>
         <div className="">
           <ul className="flex items-center" onClick={() => {

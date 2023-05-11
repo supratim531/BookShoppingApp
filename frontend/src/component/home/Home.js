@@ -22,7 +22,7 @@ function Home() {
         (context.isAdmin) &&
         // <h1>Landing Page: This is admin side</h1>
         <div className="flex flex-col">
-          <div className="p-4 bg-red-600">
+          <div className="p-4 bg-red-400">
             <ul className="flex space-x-8">
               <li><NavLink className="p-2 text-white" to={""}>All Users</NavLink></li>
               <li><NavLink className="p-2 text-white" to={"all-books"}>All Books</NavLink></li>
