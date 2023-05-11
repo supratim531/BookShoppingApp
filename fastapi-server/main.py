@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from chatbot.chat import answer_of_chatbot as answer
 
 
 app = FastAPI()
@@ -13,7 +14,7 @@ popular_50_unique_books_extracted_info = pd.read_pickle(
 
 
 origins = [
-    "http://localhost:3000"
+    "*"
 ]
 
 app.add_middleware(
@@ -98,3 +99,18 @@ def recommended_book(bookName: str):
         }
 
     return data
+
+
+@app.get("/api/assistant-response")
+def assistant_response(query: str):
+    result = None
+
+    try:
+        result = answer(query)
+        print(result)
+    except Exception as e:
+        print(e)
+
+    return {
+        "data": result
+    }
